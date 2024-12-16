@@ -1,5 +1,4 @@
 import { Text, View, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
 import Login from "../../src/screens/Login/Login"
 
 export default function Index() {
@@ -7,9 +6,6 @@ export default function Index() {
     <View style={styles.container}>
       <Text style={styles.text}>Home screen</Text>
       <Login />
-      {/* <Link href="/about" style={styles.button}>
-        Go to About screen
-      </Link> */}
     </View>
   );
 }
