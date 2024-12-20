@@ -1,11 +1,12 @@
 import { Text, View, StyleSheet } from 'react-native';
 import Login from "../../src/screens/RaiseComplaint/RaiseComplaint.js"
-import * as DocumentPicker from 'expo-document-picker';
+import CheckStatus from "../../src/screens/Home/CheckStatus.js"
 
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Login />
+      {/* <Login /> */}
+      <CheckStatus />
     </View>
   );
 }
