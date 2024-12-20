@@ -5,10 +5,11 @@ import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CustomButton } from './CustomButton';
 import CameraPreview from './CameraPreview';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 import Canvas from './Canvas';
 
-export default function CameraCompNew({cameraCloserFunc}) {
+export default function CameraCompNew({ cameraCloserFunc }) {
     const [facing, setFacing] = useState('back');
     const [permission, requestPermission] = useCameraPermissions();
     const [previewVisible, setPreviewVisible] = useState(false);
@@ -92,7 +93,6 @@ export default function CameraCompNew({cameraCloserFunc}) {
             await MediaLibrary.saveToLibraryAsync(localUri);
             if (localUri) {
                 alert("Saved!");
-                await schedulePushNotification();
             }
         } catch (e) {
             console.log(e);
@@ -135,11 +135,6 @@ export default function CameraCompNew({cameraCloserFunc}) {
                 </> :
                 <>
                     <CameraView style={styles.camera} facing={facing} ref={(ref) => (cameraRef = ref)}>
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-                                <Text style={styles.text}>Flip Camera</Text>
-                            </TouchableOpacity>
-                        </View>
                     </CameraView>
                     <View style={styles.cameraOptions}>
                         <CustomButton imageRecieved={require('../../assets/icons/front-camera.png')} textRecieved={'Change Camera'} functionRecieved={toggleCameraFacing} />
@@ -229,11 +224,10 @@ const styles = StyleSheet.create({
         gap: 10,
         marginVertical: 10,
         position: 'absolute',
-        bottom: -10,
+        bottom: -60,
         flexWrap: 'wrap',
         justifyContent: 'center',
-        backgroundColor: 'white',
-        padding: 10
+        alignSelf: 'center'
     },
     modalBackground: {
         flex: 1,
