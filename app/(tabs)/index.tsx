@@ -1,21 +1,8 @@
-import { Text, View, StyleSheet } from 'react-native';
-import Login from "../../src/screens/Home/RaiseComplaint/RaiseComplaint.js"
-import * as DocumentPicker from 'expo-document-picker';
+import Home from "../../src/screens/Home/Home";
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <Login />
-    </View>
+    <Home />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  button: {
-    fontSize: 20,
-    color: '#fff',
-  },
-});

@@ -1,7 +1,19 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
-export default function App() {
+export default function Home() {
+    const router = useRouter();
+
+    function takeMeToRaiseComplaintPage(){
+        const path = "/(tabs)/modules/raiseComplaintTab";
+        router.push({pathname: path})
+    }
+
+    function takeMeToCheckStatusPage(){
+        const path = "/(tabs)/modules/checkStatusTab";
+        router.push({pathname: path})
+    }
     return (
         <View style={styles.container}>
             {/* Header */}
@@ -12,16 +24,17 @@ export default function App() {
             {/* Main Content */}
             <View style={styles.content}>
                 {/* Raise Complaint Card */}
-                <TouchableOpacity style={styles.card}>
+                <TouchableOpacity style={styles.card} onPress={takeMeToRaiseComplaintPage}>
                     <Text style={styles.cardTitle}>Raise Complaint</Text>
                     <Image
                         source={require('../../../assets/images/complaint.png')}
                         style={[styles.cardImage, styles.complaintImg]}
+                        
                     />
                 </TouchableOpacity>
 
                 {/* Check Status Card */}
-                <TouchableOpacity style={styles.card}>
+                <TouchableOpacity style={styles.card} onPress={takeMeToCheckStatusPage}>
                     <Text style={styles.cardTitle}>Check Status</Text>
                     <Image
                         source={require('../../../assets/images/checking.png')}

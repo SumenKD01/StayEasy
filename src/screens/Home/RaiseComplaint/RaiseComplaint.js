@@ -11,20 +11,60 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
+import { Controller, useForm } from 'react-hook-form';
+import ShowOptionsModal from '../../../components/Modals/ShowOptionsModal';
 
-export default function App() {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [contact, setContact] = useState('');
+export default function RaiseComplaint() {
     const [fileName, setFileName] = useState('IMG918191000192.jpg');
     const [isDropdownVisible, setDropdownVisible] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('');
-    const categories = ['Billing Issue', 'Service Request', 'Technical Support', 'Feedback', 'Other'];
+    const [isSubDropdownVisible, setSubDropdownVisible] = useState(false);
+    const [selectedSubCategory, setSelectedSubCategory] = useState('');
+    const categories = ['Civil', 'Electrical', 'Horticulture', 'Housekeeping'];
+    const subCategories = ['Carpentering', 'Mason', 'Plumbering'];
+
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            title: '',
+            description: '',
+            category: selectedCategory,
+            subCategory: selectedSubCategory,
+            imageFileName: '',
+            mobileNo: '',
+            employeeId: '',
+            plantName: ''
+        }
+    })
 
     const handleCategorySelect = (category) => {
         setSelectedCategory(category);
         setDropdownVisible(false);
     };
+
+    const handleSubCategorySelect = (category) => {
+        setSelectedSubCategory(category);
+        setSubDropdownVisible(false);
+    };
+
+    const onSubmit = async (data) => {
+        console.log(data);
+        reset();
+        setSelectedCategory("");
+        setSelectedSubCategory("");
+    }
+
+    function toggleCategoryModal() {
+        setDropdownVisible(isDropdownVisible ? false : true);
+    }
+
+    function toggleSubCategoryModal() {
+        setSubDropdownVisible(isSubDropdownVisible ? false : true);
+    }
 
     const handleFileUpload = async () => {
         try {
@@ -53,101 +93,167 @@ export default function App() {
             {/* Form */}
             <ScrollView contentContainerStyle={styles.form}>
                 {/* Title */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Title"
-                    placeholderTextColor="#7A7A7A"
-                    value={title}
-                    onChangeText={(text) => setTitle(text)}
-                />
-
-                {/* Description */}
-                <TextInput
-                    style={[styles.input, styles.description]}
-                    placeholder="Description (in 100 words)"
-                    placeholderTextColor="#7A7A7A"
-                    multiline
-                    numberOfLines={4}
-                    value={description}
-                    onChangeText={(text) => setDescription(text)}
-                />
-
-                {/* Contact */}
-                <TextInput
-                    style={styles.input}
-                    placeholder="Contact No."
-                    placeholderTextColor="#7A7A7A"
-                    keyboardType="numeric"
-                    value={contact}
-                    onChangeText={(text) => setContact(text)}
-                />
-
-                {/* Select Category */}
-                <TouchableOpacity
-                    style={styles.dropdown}
-                    onPress={() => setDropdownVisible(true)}
-                >
-                    <Text style={styles.dropdownText}>
-                        {selectedCategory || 'Select Category'}
-                    </Text>
-                    <MaterialIcons name="arrow-drop-down" size={24} color="#7A7A7A" />
-                </TouchableOpacity>
-
-                {/* Upload */}
-                <TouchableOpacity style={styles.upload} onPress={handleFileUpload}>
-                    <Text style={styles.uploadText}>Upload</Text>
-                    <MaterialIcons name="file-upload" size={24} color="#8E8E8E" />
-                </TouchableOpacity>
-
-                {/* File Name */}
-                {fileName ? (
-                    <View style={styles.fileRow}>
-                        <Text style={styles.fileName}>{fileName}</Text>
-                        <MaterialIcons
-                            name="delete"
-                            size={20}
-                            color="#8E8E8E"
-                            onPress={() => setFileName('')}
+                <Controller
+                    control={control}
+                    name='title'
+                    rules={{ required: 'Please enter the Title !' }}
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Title"
+                            placeholderTextColor="#7A7A7A"
+                            value={value}
+                            onChangeText={(abc) => onChange(abc)}
                         />
-                    </View>
-                ) : null}
+                    )}
+                />
+                {errors.title && (
+                    <Text style={{ color: 'red' }}>
+                        {errors.title.message}
+                    </Text>
+                )}
+
+                <Controller
+                    control={control}
+                    name='description'
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            style={[styles.input, styles.description]}
+                            placeholder="Description (in 100 words, Optional)"
+                            placeholderTextColor="#7A7A7A"
+                            multiline
+                            numberOfLines={4}
+                            value={value}
+                            onChangeText={(abc) => onChange(abc)}
+                        />
+                    )}
+                />
+                {errors.description && (
+                    <Text style={{ color: 'red' }}>
+                        {errors.description.message}
+                    </Text>
+                )}
+
+                <Controller
+                    control={control}
+                    name='mobileNo'
+                    rules={{ required: 'Please enter the Contact No. !' }}
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Contact No."
+                            placeholderTextColor="#7A7A7A"
+                            keyboardType="numeric"
+                            value={value}
+                            onChangeText={(abc) => onChange(abc)}
+                        />
+                    )}
+                />
+                {errors.mobileNo && (
+                    <Text style={{ color: 'red' }}>
+                        {errors.mobileNo.message}
+                    </Text>
+                )}
+
+                <Controller
+                    control={control}
+                    name='category'
+                    rules={{ required: 'Please select a category !' }}
+                    render={({ field: { onChange, value } }) => (
+                        <>
+                            <TouchableOpacity
+                                style={styles.dropdown}
+                                onPress={() => setDropdownVisible(true)}
+                            >
+                                <Text style={styles.dropdownText}>
+                                    {selectedCategory || 'Select Category'}
+                                </Text>
+                                <MaterialIcons name="arrow-drop-down" size={24} color="#7A7A7A" />
+                            </TouchableOpacity>
+                            <ShowOptionsModal functionToExecute={(abc) => { handleCategorySelect(abc); onChange(abc); }} isVisible={isDropdownVisible} onClose={toggleCategoryModal} options={categories} />
+                        </>
+                    )}
+                />
+                {errors.category && (
+                    <Text style={{ color: 'red' }}>
+                        {errors.category.message}
+                    </Text>
+                )}
+
+                {selectedCategory === "Civil" &&
+                    <>
+                        <Controller
+                            control={control}
+                            name='subCategory'
+                            rules={{ required: 'Please select the sub category !' }}
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <TouchableOpacity
+                                        style={styles.dropdown}
+                                        onPress={() => setSubDropdownVisible(true)}
+                                    >
+                                        <Text style={styles.dropdownText}>
+                                            {selectedSubCategory || 'Select Category'}
+                                        </Text>
+                                        <MaterialIcons name="arrow-drop-down" size={24} color="#7A7A7A" />
+                                    </TouchableOpacity>
+                                    <ShowOptionsModal functionToExecute={(abc) => { handleSubCategorySelect(abc); onChange(abc); }} isVisible={isSubDropdownVisible} onClose={toggleSubCategoryModal} options={subCategories} />
+                                </>
+                            )}
+                        />
+                        {errors.subCategory && (
+                            <Text style={{ color: 'red' }}>
+                                {errors.subCategory.message}
+                            </Text>
+                        )}
+
+
+                    </>
+                }
+
+                <Controller
+                    control={control}
+                    name='imageFileName'
+                    // rules={{ required: 'Please enter the Job Description !' }}
+                    render={({ field: { onChange, value } }) => (
+                        <View>
+                            {/* Upload */}
+                            <TouchableOpacity style={styles.upload} onPress={handleFileUpload}>
+                                <Text style={styles.uploadText}>Upload</Text>
+                                <MaterialIcons name="file-upload" size={24} color="#8E8E8E" />
+                            </TouchableOpacity>
+
+                            {/* File Name */}
+                            {fileName ? (
+                                <View style={styles.fileRow}>
+                                    <Text style={styles.fileName}>{fileName}</Text>
+                                    <MaterialIcons
+                                        name="delete"
+                                        size={20}
+                                        color="#8E8E8E"
+                                        onPress={() => setFileName('')}
+                                    />
+                                </View>
+                            ) : null}
+                        </View>
+                    )}
+                />
+                {errors.imageFileName && (
+                    <Text style={{ color: 'red' }}>
+                        {errors.imageFileName.message}
+                    </Text>
+                )}
+
+
 
                 {/* Submit Button */}
-                <TouchableOpacity style={styles.submitButton}>
+                <TouchableOpacity style={styles.submitButton} onPress={handleSubmit(onSubmit)}>
                     <Text style={styles.submitText}>Raise Complaint</Text>
                 </TouchableOpacity>
             </ScrollView>
 
             {/* Dropdown Modal */}
-            <Modal
-                visible={isDropdownVisible}
-                transparent
-                // animationType="slide"
-                onRequestClose={() => setDropdownVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <FlatList
-                            data={categories}
-                            keyExtractor={(item) => item}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    style={styles.modalItem}
-                                    onPress={() => handleCategorySelect(item)}
-                                >
-                                    <Text style={styles.modalItemText}>{item}</Text>
-                                </TouchableOpacity>
-                            )}
-                        />
-                        <TouchableOpacity
-                            style={styles.modalCloseButton}
-                            onPress={() => setDropdownVisible(false)}
-                        >
-                            <Text style={styles.modalCloseButtonText}>Close</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+
         </View>
     );
 }
@@ -245,40 +351,5 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         fontWeight: 'bold',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        width: '80%',
-        maxHeight: '60%',
-        padding: 20,
-    },
-    modalItem: {
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#EEE',
-    },
-    modalItemText: {
-        fontSize: 16,
-        color: '#333',
-    },
-    modalCloseButton: {
-        borderWidth: 2,
-        borderColor: '#D62E2E',
-        borderRadius: 10,
-        paddingVertical: 10,
-        marginTop: 10,
-        alignItems: 'center',
-    },
-    modalCloseButtonText: {
-        color: '#D62E2E',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+    }
 });
