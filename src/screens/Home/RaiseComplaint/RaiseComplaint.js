@@ -13,6 +13,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import { Controller, useForm } from 'react-hook-form';
 import ShowOptionsModal from '../../../components/Modals/ShowOptionsModal';
+import { useRouter } from 'expo-router';
 
 export default function RaiseComplaint() {
     const [fileName, setFileName] = useState('IMG918191000192.jpg');
@@ -22,6 +23,7 @@ export default function RaiseComplaint() {
     const [selectedSubCategory, setSelectedSubCategory] = useState('');
     const categories = ['Civil', 'Electrical', 'Horticulture', 'Housekeeping'];
     const subCategories = ['Carpentering', 'Mason', 'Plumbering'];
+    const router = useRouter();
 
     const {
         control,
@@ -64,6 +66,11 @@ export default function RaiseComplaint() {
 
     function toggleSubCategoryModal() {
         setSubDropdownVisible(isSubDropdownVisible ? false : true);
+    }
+
+    function moveToImageEditor(){
+        const path = "/(tabs)/modules/imageEditorTab";
+        router.push({pathname: path});
     }
 
     const handleFileUpload = async () => {
@@ -218,7 +225,7 @@ export default function RaiseComplaint() {
                     render={({ field: { onChange, value } }) => (
                         <View>
                             {/* Upload */}
-                            <TouchableOpacity style={styles.upload} onPress={handleFileUpload}>
+                            <TouchableOpacity style={styles.upload} onPress={moveToImageEditor}>
                                 <Text style={styles.uploadText}>Upload</Text>
                                 <MaterialIcons name="file-upload" size={24} color="#8E8E8E" />
                             </TouchableOpacity>
